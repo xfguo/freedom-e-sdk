@@ -25,9 +25,6 @@ INCLUDES += -I$(PLATFORM_DIR)
 
 TOOL_DIR = $(BSP_BASE)/../toolchain/bin
 
-CC := $(TOOL_DIR)/riscv32-unknown-elf-gcc
-AR := $(TOOL_DIR)/riscv32-unknown-elf-ar
-
 LDFLAGS += -T $(LINKER_SCRIPT) -nostartfiles
 LDFLAGS += -L$(ENV_DIR)
 
