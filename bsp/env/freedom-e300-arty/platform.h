@@ -4,8 +4,15 @@
 #define _SIFIVE_PLATFORM_H
 
 // Some things missing from the official encoding.h
-#define MCAUSE_INT         0x80000000
-#define MCAUSE_CAUSE       0x7FFFFFFF
+#if __riscv_xlen == 32
+#define MCAUSE_INT         _AC(0x80000000,UL)
+#define MCAUSE_CAUSE       _AC(0x7FFFFFFF,UL)
+#elif __riscv_xlen == 64
+#define MCAUSE_INT         _AC(0x8000000000000000,ULL)
+#define MCAUSE_CAUSE       _AC(0x7FFFFFFFFFFFFFFF,ULL)
+#else
+#error "Unknown XLEN"
+#endif
 
 #include "sifive/const.h"
 #include "sifive/devices/aon.h"
