@@ -194,7 +194,7 @@ software_clean:
 
 .PHONY: software
 software: software_clean
-	$(MAKE) -C $(PROGRAM_DIR) CC=$(RISCV_GCC) AR=$(RISCV_AR) BSP_BASE=$(abspath bsp)
+	$(MAKE) -C $(PROGRAM_DIR) CC=$(RISCV_GCC) AR=$(RISCV_AR) BSP_BASE=$(abspath bsp) BOARD=$(BOARD)
 
 dasm: software $(RISCV_OBJDUMP)
 	$(RISCV_OBJDUMP) -D $(PROGRAM_ELF)

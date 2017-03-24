@@ -8,7 +8,6 @@ all: $(TARGET)
 
 include $(BSP_BASE)/libwrap/libwrap.mk
 
-BOARD ?= freedom-e300-hifive1
 ENV_DIR = $(BSP_BASE)/env
 PLATFORM_DIR = $(ENV_DIR)/$(BOARD)
 
