@@ -198,6 +198,99 @@ void reset_demo (){
     set_csr(mstatus, MSTATUS_MIE);
 }
 
+/* verify 32-bit r/w */
+int test_big_sram_32bit(void)
+{
+  uint32_t *p;
+  int i;
+  const char verify_start[] = "RAM 32-bit verify start.\n";
+  const char verify_failed[] = "RAM 32-bit verify failed!!!\n";
+  const char verify_done[] = "RAM 32-bit verify done.\n";
+
+  write (STDOUT_FILENO, verify_start, strlen(verify_start));
+
+  p = (uint32_t *)0x52000000;
+
+  for (i = 0;i < 0x30000;i+=4) {
+    *p = 0x52000000 | i;
+    p++;
+  }
+  
+  
+  p = (uint32_t *)0x52000000;
+  for (i = 0;i < 0x30000;i+=4) {
+    if (*p != (0x52000000 | i)) {
+      write (STDOUT_FILENO, verify_failed, strlen(verify_failed));
+      for(;;);
+    }
+    p++;
+  }
+  
+  write (STDOUT_FILENO, verify_done, strlen(verify_done));
+}
+
+/* verify 16-bit r/w */
+int test_big_sram_16bit(void)
+{
+  uint16_t *p;
+  uint32_t i;
+  const char verify_start[] = "RAM 16-bit verify start.\n";
+  const char verify_failed[] = "RAM 16-bit verify failed!!!\n";
+  const char verify_done[] = "RAM 16-bit verify done.\n";
+
+  write (STDOUT_FILENO, verify_start, strlen(verify_start));
+
+  p = (uint16_t *)0x52000000;
+
+  for (i = 0;i < 0x30000;i+=2) {
+    *p = 0x5200 | (i & 0xFFFF);
+    p++;
+  }
+  
+  
+  p = (uint16_t *)0x52000000;
+  for (i = 0;i < 0x30000;i+=2) {
+    if (*p != (0x5200 | (i & 0xFFFF))) {
+      write (STDOUT_FILENO, verify_failed, strlen(verify_failed));
+      for(;;);
+    }
+    p++;
+  }
+  
+  write (STDOUT_FILENO, verify_done, strlen(verify_done));
+}
+
+/* verify 8-bit r/w */
+int test_big_sram_8bit(void)
+{
+  uint8_t *p;
+  uint32_t i;
+  const char verify_start[] = "RAM 8-bit verify start.\n";
+  const char verify_failed[] = "RAM 8-bit verify failed!!!\n";
+  const char verify_done[] = "RAM 8-bit verify done.\n";
+
+  write (STDOUT_FILENO, verify_start, strlen(verify_start));
+
+  p = (uint8_t *)0x52000000;
+
+  for (i = 0;i < 0x30000;i+=1) {
+    *p = 0x52 | (i & 0xFF);
+    p++;
+  }
+  
+  
+  p = (uint8_t *)0x52000000;
+  for (i = 0;i < 0x30000;i+=1) {
+    if (*p != (0x52 | (i & 0xFF))) {
+      write (STDOUT_FILENO, verify_failed, strlen(verify_failed));
+      for(;;);
+    }
+    p++;
+  }
+  
+  write (STDOUT_FILENO, verify_done, strlen(verify_done));
+}
+
 int main(int argc, char **argv)
 {
   // Set up the GPIOs such that the LED GPIO
@@ -222,6 +315,13 @@ int main(int argc, char **argv)
 	    PLIC_BASE_ADDR,
 	    PLIC_NUM_INTERRUPTS,
 	    PLIC_NUM_PRIORITIES);
+
+  int i;
+  for (i = 0;i < 1000;i++) {
+    test_big_sram_32bit();
+    test_big_sram_16bit();
+    test_big_sram_8bit();
+  }
 
   reset_demo();
 
