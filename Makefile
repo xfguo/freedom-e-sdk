@@ -2,7 +2,7 @@ srcdir := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 srcdir := $(srcdir:/=)
 wrkdir := $(CURDIR)/work
 
-DEFAULT_BOARD := freedom-e300-hifive1
+DEFAULT_BOARD := freedom-e300-arty
 DEFAULT_PROGRAM := demo_gpio
 
 #############################################################
@@ -72,7 +72,7 @@ $(openocd_dest)/bin/openocd: $(openocd_srcdir)
 	cd $(openocd_srcdir); \
 	$(openocd_srcdir)/bootstrap
 	cd $(openocd_wrkdir); \
-	$(openocd_srcdir)/configure --prefix=$(openocd_dest)
+	$(openocd_srcdir)/configure --prefix=$(openocd_dest) --enable-jtag_vpi
 	$(MAKE) -C $(openocd_wrkdir)
 	$(MAKE) -C $(openocd_wrkdir) install
 
